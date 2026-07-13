@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gojo — Multilingual Language & Data Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #12213D;
+    --ink-soft: #1B2C4C;
+    --ink-softer: #223559;
+    --paper: #EFEADA;
+    --paper-dim: #E5DFCB;
+    --amber: #E2A03F;
+    --verbatim: #5B9279;
+    --text-light: #F6F3EA;
+    --text-dark: #16233B;
+    --slate: #8592A6;
+    --slate-dark: #5B677E;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Work Sans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--text-light);
+    font-family: var(--sans);
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; }
+
+  ::selection { background: var(--amber); color: var(--text-dark); }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.4rem clamp(1.5rem, 5vw, 4rem);
+    background: rgba(18, 33, 61, 0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(246, 243, 234, 0.08);
+  }
+  .nav-brand {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+  }
+  .nav-brand .tag {
+    color: var(--amber);
+  }
+  .nav-links {
+    display: flex;
+    gap: clamp(1rem, 3vw, 2.2rem);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--slate);
+    transition: color 0.2s ease;
+    position: relative;
+  }
+  .nav-links a:hover { color: var(--text-light); }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem clamp(1.5rem, 6vw, 5rem) 3rem;
+    position: relative;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(246,243,234,0.035) 1px, transparent 1px);
+    background-size: 100% 2.4em;
+    pointer-events: none;
+  }
+  .transcript-meta {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 1.6rem;
+  }
+  .transcript-meta .rec {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--verbatim);
+    margin-right: 0.5em;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  .hero-lines {
+    max-width: 900px;
+  }
+  .tline {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+    margin-bottom: 0.9rem;
+    opacity: 0;
+    animation: rise 0.6s ease forwards;
+  }
+  .tline:nth-child(1) { animation-delay: 0.1s; }
+  .tline:nth-child(2) { animation-delay: 0.35s; }
+  .tline:nth-child(3) { animation-delay: 0.6s; }
+  .tline:nth-child(4) { animation-delay: 0.95s; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .ts {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--amber);
+    flex-shrink: 0;
+    width: 68px;
+    padding-top: 0.4em;
+  }
+  .speaker {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--slate);
+    flex-shrink: 0;
+    width: 74px;
+    padding-top: 0.4em;
+    letter-spacing: 0.04em;
+  }
+  .hero-lines h1 {
+    font-size: clamp(1.9rem, 5vw, 3.4rem);
+    font-weight: 600;
+    line-height: 1.15;
+  }
+  .hero-lines .sub {
+    font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+    font-weight: 400;
+    color: #D8D2C0;
+  }
+  .hero-lines .lang-line {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    color: var(--slate);
+  }
+  .hero-lines .lang-line span {
+    color: var(--verbatim);
+  }
+  .hero-cta {
+    margin-top: 2.6rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: rise 0.6s ease forwards;
+    animation-delay: 1.3s;
+  }
+  .btn {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.85rem 1.6rem;
+    border-radius: 3px;
+    text-decoration: none;
+    transition: transform 0.15s ease, background 0.2s ease;
+    display: inline-block;
+  }
+  .btn-primary {
+    background: var(--amber);
+    color: var(--text-dark);
+    font-weight: 600;
+  }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-ghost {
+    border: 1px solid rgba(246,243,234,0.25);
+    color: var(--text-light);
+  }
+  .btn-ghost:hover { border-color: var(--amber); color: var(--amber); }
+
+  /* SECTION SHARED */
+  section {
+    padding: 6rem clamp(1.5rem, 6vw, 5rem);
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--amber);
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 600;
+    margin-bottom: 2.8rem;
+    max-width: 700px;
+  }
+
+  /* SERVICES */
+  .services { background: var(--ink-soft); }
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.4rem;
+  }
+  .service-card {
+    background: var(--ink);
+    border: 1px solid rgba(246,243,234,0.07);
+    border-radius: 6px;
+    padding: 1.8rem;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .service-card:hover {
+    border-color: var(--amber);
+    transform: translateY(-3px);
+  }
+  .service-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    padding: 0.25em 0.6em;
+    border-radius: 3px;
+    background: rgba(91, 146, 121, 0.18);
+    color: var(--verbatim);
+    margin-bottom: 1rem;
+  }
+  .service-card h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+  .service-card p {
+    font-size: 0.9rem;
+    color: var(--slate);
+  }
+
+  /* LANGUAGES */
+  .lang-list {
+    max-width: 720px;
+  }
+  .lang-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 90px;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid rgba(246,243,234,0.08);
+    font-family: var(--mono);
+  }
+  .lang-row .lname {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  .lang-bar-track {
+    height: 6px;
+    background: rgba(246,243,234,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .lang-bar-fill {
+    height: 100%;
+    background: var(--verbatim);
+    border-radius: 3px;
+  }
+  .lang-row .llevel {
+    font-size: 0.68rem;
+    color: var(--slate);
+    text-align: right;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* BACKGROUND */
+  .background { background: var(--paper); color: var(--text-dark); }
+  .background .section-label { color: #B5762A; }
+  .bg-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 3rem;
+  }
+  @media (max-width: 800px) {
+    .bg-grid { grid-template-columns: 1fr; }
+    .lang-row { grid-template-columns: 110px 1fr 70px; }
+  }
+  .bg-credential {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    line-height: 1.9;
+    color: var(--slate-dark);
+    border-left: 2px solid var(--amber);
+    padding-left: 1.2rem;
+  }
+  .bg-credential strong {
+    display: block;
+    color: var(--text-dark);
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+  }
+  .bg-text p {
+    margin-bottom: 1.1rem;
+    color: #3A4763;
+    font-size: 1rem;
+  }
+
+  /* PLATFORMS */
+  .platforms { background: var(--ink); }
+  .platform-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+  }
+  .platform-chip {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    padding: 0.7rem 1.3rem;
+    border: 1px solid rgba(246,243,234,0.15);
+    border-radius: 30px;
+    color: var(--text-light);
+  }
+
+  /* CONTACT / FOOTER */
+  footer {
+    background: var(--ink-soft);
+    padding: 5rem clamp(1.5rem, 6vw, 5rem) 3rem;
+    border-top: 1px solid rgba(246,243,234,0.08);
+  }
+  footer .section-title { margin-bottom: 1.6rem; }
+  footer p.lead {
+    color: var(--slate);
+    max-width: 520px;
+    margin-bottom: 2.2rem;
+  }
+  .contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  .foot-bottom {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--slate-dark);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid rgba(246,243,234,0.06);
+  }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--ink); }
+  ::-webkit-scrollbar-thumb { background: var(--ink-softer); border-radius: 5px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">GOJO <span class="tag">// lang & data</span></div>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#languages">Languages</a>
+    <a href="#background">Background</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="transcript-meta"><span class="rec"></span>LIVE TRANSCRIPT — SESSION 001</div>
+  <div class="hero-lines">
+    <div class="tline">
+      <span class="ts">00:00:01</span>
+      <span class="speaker">[GOJO]</span>
+      <h1>I turn spoken language into structured, usable data.</h1>
+    </div>
+    <div class="tline">
+      <span class="ts">00:00:06</span>
+      <span class="speaker">[GOJO]</span>
+      <div class="sub">Transcription · Translation · Data Annotation · Voice &amp; Language Rating</div>
+    </div>
+    <div class="tline">
+      <span class="ts">00:00:11</span>
+      <span class="speaker">&nbsp;</span>
+      <div class="lang-line">EN · <span>ES</span> · DE · <span>PT</span> · AR · FR-CA · <span>YO</span></div>
+    </div>
+    <div class="tline">
+      <span class="ts">00:00:14</span>
+      <span class="speaker">&nbsp;</span>
+      <div class="lang-line" style="color:#D8D2C0;">Life sciences background (Animal Production &amp; Health, FUNAAB) applied to STEM &amp; health-domain annotation.</div>
+    </div>
+  </div>
+  <div class="hero-cta">
+    <a href="#contact" class="btn btn-primary">Work with me</a>
+    <a href="#services" class="btn btn-ghost">See services</a>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <div class="section-label">/// services</div>
+  <div class="section-title">Four ways I work with language and data.</div>
+  <div class="service-grid">
+    <div class="service-card">
+      <span class="service-tag">CLEAN / FULL VERBATIM</span>
+      <h3>Transcription</h3>
+      <p>Accurate transcripts with correct timestamp conventions, speaker labeling, and formatting — clean or full verbatim, per spec.</p>
+    </div>
+    <div class="service-card">
+      <span class="service-tag">7 LANGUAGES</span>
+      <h3>Translation</h3>
+      <p>Written and spoken translation across English, Spanish, German, Portuguese, Arabic, Canadian French, and Yoruba.</p>
+    </div>
+    <div class="service-card">
+      <span class="service-tag">STEM / HEALTH</span>
+      <h3>Data Annotation</h3>
+      <p>Labeling and quality review for datasets, with domain grounding in life sciences and health-related content.</p>
+    </div>
+    <div class="service-card">
+      <span class="service-tag">TTS / QUALITY</span>
+      <h3>Voice &amp; Language Rating</h3>
+      <p>Rating and evaluation of TTS output and multilingual speech data for naturalness, accuracy, and quality.</p>
+    </div>
+  </div>
+</section>
+
+<section class="languages" id="languages">
+  <div class="section-label">/// languages</div>
+  <div class="section-title">Working languages, by fluency.</div>
+  <div class="lang-list">
+    <div class="lang-row">
+      <div class="lname">English</div>
+      <div class="lang-bar-track"><div class="lang-bar-fill" style="width:100%"></div></div>
+      <div class="llevel">Native</div>
+    </div>
+    <div class="lang-row">
+      <div class="lname">Spanish</div>
+      <div class="lang-bar-track"><div class="lang-bar-fill" style="width:85%"></div></div>
+      <div class="llevel">Fluent</div>
+    </div>
+    <div class="lang-row">
+      <div class="lname">German</div>
+      <div class="lang-bar-track"><div class="lang-bar-fill" style="width:85%"></div></div>
+      <div class="llevel">Fluent</div>
+    </div>
+    <div class="lang-row">
+      <div class="lname">Portuguese</div>
+      <div class="lang-bar-track"><div class="lang-bar-fill" style="width:85%"></div></div>
+      <div class="llevel">Fluent</div>
+    </div>
+    <div class="lang-row">
+      <div class="lname">Arabic</div>
+      <div class="lang-bar-track"><div class="lang-bar-fill" style="width:80%"></div></div>
+      <div class="llevel">Fluent</div>
+    </div>
+    <div class="lang-row">
+      <div class="lname">French (CA)</div>
+      <div class="lang-bar-track"><div class="lang-bar-fill" style="width:65%"></div></div>
+      <div class="llevel">Conversational</div>
+    </div>
+    <div class="lang-row">
+      <div class="lname">Yoruba</div>
+      <div class="lang-bar-track"><div class="lang-bar-fill" style="width:55%"></div></div>
+      <div class="llevel">Working</div>
+    </div>
+  </div>
+</section>
+
+<section class="background" id="background">
+  <div class="section-label">/// background</div>
+  <div class="section-title">Science-trained, language-first.</div>
+  <div class="bg-grid">
+    <div class="bg-credential">
+      <strong>B.Sc. Animal Production &amp; Health</strong>
+      Federal University of Agriculture, Abeokuta (FUNAAB)<br>2026
+    </div>
+    <div class="bg-text">
+      <p>My degree is in the life sciences, which gives me a real grounding in scientific terminology, methodology, and health-related content — useful for annotation and transcription work that touches STEM or medical subject matter, where getting the domain vocabulary right matters as much as getting the language right.</p>
+      <p>Alongside that, I've built a freelance practice in language and data services: completing structured transcription training (verbatim conventions, number and title formatting, speaker labeling, timestamp standards) and taking on live jobs across multiple languages.</p>
+    </div>
+  </div>
+</section>
+
+<section class="platforms">
+  <div class="section-label">/// where I work</div>
+  <div class="section-title">Platforms</div>
+  <div class="platform-list">
+    <div class="platform-chip">Fiverr</div>
+    <div class="platform-chip">Upwork</div>
+    <div class="platform-chip">GoTranscript</div>
+    <div class="platform-chip">Prolific</div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="section-label">/// contact</div>
+  <div class="section-title">Let's work together.</div>
+  <p class="lead">Available for transcription, translation, data annotation, and voice/language rating work. Reach out with your project details.</p>
+  <div class="contact-links">
+    <a href="mailto:your-email@example.com" class="btn btn-primary">Email me</a>
+    <a href="#" class="btn btn-ghost">Fiverr profile</a>
+    <a href="#" class="btn btn-ghost">Upwork profile</a>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 Gojo</span>
+    <span>Built for multilingual language &amp; data work</span>
+  </div>
+</footer>
+
+</body>
+</html>
